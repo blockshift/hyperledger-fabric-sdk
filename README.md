@@ -1,26 +1,29 @@
 ## Balance transfer
 
+Please clone main hyperledger-fabric-node sdk repository from here 
+https://github.com/hyperledger/fabric-sdk-node
+
+I have used "RC-1" release. 
+
+
 A sample Node.js app to demonstrate **__fabric-client__** & **__fabric-ca-client__** Node.js SDK APIs
 
 ### Prerequisites and setup: 
 
-* [Docker](https://www.docker.com/products/overview) - v1.12 or higher
-* [Docker Compose](https://docs.docker.com/compose/overview/) - v1.8 or higher
-* [Git client](https://git-scm.com/downloads) - needed for clone commands
-* **Node.js** v6.2.0 - 6.10.0 ( __Node v7+ is not supported__ )
-* Download docker images
+Clone fbairc-node-sdk repository from given link. Make sure you clone "RC-1" tag.
 
+After then Delete fabric-rc1/fabric-sdk-node-1.0.0-rc1/examples/balance-transfer/ folder
+and download this complete repository.
 ```
 cd fabric-sdk-node/examples/balance-transfer/
 docker-compose -f artifacts/docker-compose.yaml pull
 ```
 
-Once you have completed the above setup, you will be provisioned a local network with following configuration:
-
-* 2 CAs
-* A SOLO orderer
-* 4 peers (2 peers per Org)
-
+Once you have completed the above setup. You will get
+* 5 Organizations
+* 5 CA
+* 10 Peers . Each organization contain 2 peers
+* One orderer service
 #### Artifacts
 * Crypto material has been generated using the **cryptogen** tool from fabric and mounted to all peers, the orderering node and CA containers. More details regarding the cryptogen tool are available [here](http://hyperledger-fabric.readthedocs.io/en/latest/getting_started.html#using-the-cryptogen-tool).
 * An Orderer genesis block (genesis.block) and channel configuration transaction (mychannel.tx) has been pre generated using the **configtxgen** tool and placed within the artifacts folder. More details regarding the configtxgen tool are available [here](http://hyperledger-fabric.readthedocs.io/en/latest/getting_started.html#using-the-configtxgen-tool).
