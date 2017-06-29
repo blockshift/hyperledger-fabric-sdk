@@ -277,6 +277,53 @@ curl -s -X GET \
 echo
 echo
 
+
+echo "GET query Block by blockNumber 0"
+echo
+curl -s -X GET \
+  "http://localhost:4000/channels/mychannel/blocks/0?peer=peer2" \
+  -H "authorization: Bearer $ORG1_TOKEN" \
+  -H "content-type: application/json"
+echo
+echo
+
+echo "GET query Block by blockNumber 2"
+echo
+curl -s -X GET \
+  "http://localhost:4000/channels/mychannel/blocks/2?peer=peer2" \
+  -H "authorization: Bearer $ORG2_TOKEN" \
+  -H "content-type: application/json"
+echo
+echo
+
+echo "GET query Block by blockNumber 4"
+echo
+curl -s -X GET \
+  "http://localhost:4000/channels/mychannel/blocks/4?peer=peer2" \
+  -H "authorization: Bearer $ORG2_TOKEN" \
+  -H "content-type: application/json"
+echo
+echo
+
+echo "GET query Block by blockNumber 2"
+echo
+curl -s -X GET \
+  "http://localhost:4000/channels/mychannel/blocks/2?peer=peer3" \
+  -H "authorization: Bearer $ORG2_TOKEN" \
+  -H "content-type: application/json"
+echo
+echo
+
+echo "GET query Block by blockNumber 2 by org5"
+echo
+curl -s -X GET \
+  "http://localhost:4000/channels/mychannel/blocks/2?peer=peer2" \
+  -H "authorization: Bearer $ORG5_TOKEN" \
+  -H "content-type: application/json"
+echo
+echo
+
+
 echo "GET query Transaction by TransactionID"
 echo
 curl -s -X GET http://localhost:4000/channels/mychannel/transactions/$TRX_ID?peer=peer1 \
