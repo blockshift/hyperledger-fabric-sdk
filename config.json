@@ -1,11 +1,11 @@
 {
    "host":"localhost",
    "port":"4000",
-   "jwt_expiretime": "36000",
+   "jwt_expiretime": "360000",
    "channelName":"mychannel",
    "GOPATH":"../../../test/fixtures",
    "keyValueStore":"/tmp/fabric-client-kvs",
-   "eventWaitTime":"30000",
+   "eventWaitTime":"900000",
    "orderer":"grpcs://localhost:7050",
    "users":[
       {

@@ -51,7 +51,16 @@ var instantiateChaincode = function(channelName, chaincodeName, chaincodeVersion
 			chaincodeVersion: chaincodeVersion,
 			fcn: functionName,
 			args: args,
-			txId: tx_id
+			txId: tx_id,
+                        'endorsement-policy':{
+                                    identities: [
+                                                { role: { name: "member", mspId:"Org4MSP"  }},
+                                                { role: { name: "member", mspId:"Org3MSP" }}
+                                                ],
+                                    policy: {
+                                  '2-of': [{ 'signed-by': 0}, { 'signed-by': 1 }]
+                            }
+}
 		};
 		return channel.sendInstantiateProposal(request);
 	}, (err) => {
@@ -103,7 +112,7 @@ var instantiateChaincode = function(channelName, chaincodeName, chaincodeVersion
 				let handle = setTimeout(() => {
 					eh.disconnect();
 					reject();
-				}, 30000);
+				}, 2600000);
 
 				eh.registerTxEvent(deployId, (tx, code) => {
 					logger.info(

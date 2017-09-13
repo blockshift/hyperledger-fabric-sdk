@@ -92,6 +92,13 @@ var getBlockByNumber = function(peer, blockNumber, username, org) {
 		return 'Failed to query with error:' + err.stack ? err.stack : err;
 	});
 };
+
+
+
+
+
+
+
 var getTransactionByID = function(peer, trxnID, username, org) {
 	var target = buildTarget(peer, org);
 	var channel = helper.getChannelForOrg(org);
@@ -275,3 +282,4 @@ exports.getBlockByHash = getBlockByHash;
 exports.getChainInfo = getChainInfo;
 exports.getInstalledChaincodes = getInstalledChaincodes;
 exports.getChannels = getChannels;
+

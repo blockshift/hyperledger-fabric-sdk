@@ -1,8 +1,8 @@
 #!/bin/bash
 #
-# Copyright IBM Corp. All Rights Reserved.
+# 
 #
-# SPDX-License-Identifier: Apache-2.0
+# 
 #
 
 jq --version > /dev/null 2>&1
@@ -227,7 +227,7 @@ curl -s -X POST \
 echo
 echo
 
-echo "POST instantiate chaincode on peer1 of Org1"
+echo "POST instantiate chaincode from org1"
 echo
 curl -s -X POST \
   http://localhost:4000/channels/mychannel/chaincodes \
@@ -242,20 +242,75 @@ curl -s -X POST \
 echo
 echo
 
-echo "POST invoke chaincode on peers of Org1 and Org2"
+
+echo "POST request Enroll on Org1  ..."
 echo
-TRX_ID=$(curl -s -X POST \
+ORG6_TOKEN=$(curl -s -X POST \
+  http://localhost:4000/users \
+  -H "content-type: application/x-www-form-urlencoded" \
+  -d 'username=Junaid&orgName=org1')
+echo $ORG6_TOKEN
+ORG6_TOKEN=$(echo $ORG6_TOKEN | jq ".token" | sed "s/\"//g")
+echo
+echo "ORG1 token is $ORG6_TOKEN"
+echo
+
+
+
+
+
+
+echo "POST invoke chaincode from org1"
+echo
+TRX_ID1=$(curl -s -X POST \
   http://localhost:4000/channels/mychannel/chaincodes/mycc \
   -H "authorization: Bearer $ORG1_TOKEN" \
   -H "content-type: application/json" \
   -d '{
-	"peers": ["localhost:7051", "localhost:8051"],
+	"peers": ["localhost:10151","localhost:10351"],
 	"fcn":"initDegree",
 	"args":["Khurrum","software","Ned11831314","3.5","Ned"]
 }')
-echo "Transacton ID is $TRX_ID"
+echo "Transacton ID is $TRX_ID1"
 echo
 echo
+
+echo "POST invoke chaincode from Org2 "
+echo
+TRX_ID2=$(curl -s -X POST \
+  http://localhost:4000/channels/mychannel/chaincodes/mycc \
+  -H "authorization: Bearer $ORG2_TOKEN" \
+  -H "content-type: application/json" \
+  -d '{
+	"peers": ["localhost:10151","localhost:10351"],
+	"fcn":"initDegree",
+	"args":["Atif","software","Ned11831315","3.5","Ned"]
+}')
+echo "Transacton ID is $TRX_ID2"
+echo
+echo
+
+
+
+echo "POST invoke chaincode from org2 "
+echo
+TRX_ID3=$(curl -s -X POST \
+  http://localhost:4000/channels/mychannel/chaincodes/mycc \
+  -H "authorization: Bearer $ORG2_TOKEN" \
+  -H "content-type: application/json" \
+  -d '{
+	"peers": ["localhost:10151","localhost:10351"],
+	"fcn":"initDegree",
+	"args":["Junaid","softwares","Ned1183vbvbvh","3.5","Neds"]
+}')
+echo "Transacton ID is $TRX_ID3"
+echo
+echo
+
+
+
+
+
 
 
 
@@ -263,7 +318,7 @@ echo "GET query chaincode on peer1 of Org1"
 echo
 curl -s -X GET \
   "http://localhost:4000/channels/mychannel/chaincodes/mycc?peer=peer1&fcn=readDegree&args=%5B%22Ned11831314%22%5D" \
-  -H "authorization: Bearer $ORG1_TOKEN" \
+  -H "authorization: Bearer $ORG4_TOKEN" \
   -H "content-type: application/json"
 echo
 echo
@@ -272,7 +327,7 @@ echo "GET query Block by blockNumber"
 echo
 curl -s -X GET \
   "http://localhost:4000/channels/mychannel/blocks/1?peer=peer1" \
-  -H "authorization: Bearer $ORG1_TOKEN" \
+  -H "authorization: Bearer $ORG4_TOKEN" \
   -H "content-type: application/json"
 echo
 echo
@@ -282,55 +337,107 @@ echo "GET query Block by blockNumber 0"
 echo
 curl -s -X GET \
   "http://localhost:4000/channels/mychannel/blocks/0?peer=peer2" \
-  -H "authorization: Bearer $ORG1_TOKEN" \
-  -H "content-type: application/json"
-echo
-echo
-
-echo "GET query Block by blockNumber 2"
-echo
-curl -s -X GET \
-  "http://localhost:4000/channels/mychannel/blocks/2?peer=peer2" \
-  -H "authorization: Bearer $ORG2_TOKEN" \
-  -H "content-type: application/json"
-echo
-echo
-
-echo "GET query Block by blockNumber 4"
-echo
-curl -s -X GET \
-  "http://localhost:4000/channels/mychannel/blocks/4?peer=peer2" \
-  -H "authorization: Bearer $ORG2_TOKEN" \
-  -H "content-type: application/json"
-echo
-echo
-
-echo "GET query Block by blockNumber 2"
-echo
-curl -s -X GET \
-  "http://localhost:4000/channels/mychannel/blocks/2?peer=peer3" \
-  -H "authorization: Bearer $ORG2_TOKEN" \
-  -H "content-type: application/json"
-echo
-echo
-
-echo "GET query Block by blockNumber 2 by org5"
-echo
-curl -s -X GET \
-  "http://localhost:4000/channels/mychannel/blocks/2?peer=peer2" \
   -H "authorization: Bearer $ORG5_TOKEN" \
   -H "content-type: application/json"
 echo
 echo
 
-
-echo "GET query Transaction by TransactionID"
+echo "GET query Block by blockNumber 2"
 echo
-curl -s -X GET http://localhost:4000/channels/mychannel/transactions/$TRX_ID?peer=peer1 \
+curl -s -X GET \
+  "http://localhost:4000/channels/mychannel/blocks/2?peer=peer2" \
+  -H "authorization: Bearer $ORG3_TOKEN" \
+  -H "content-type: application/json"
+echo
+echo
+
+
+echo "GET query Block by blockNumber 3"
+echo
+curl -s -X GET \
+  "http://localhost:4000/channels/mychannel/blocks/3" \
+  -H "authorization: Bearer $ORG6_TOKEN" \
+  -H "content-type: application/json"
+echo
+echo
+
+
+
+
+echo "GET query Block by blockNumber 4"
+echo
+curl -s -X GET \
+  "http://localhost:4000/channels/mychannel/blocks/4" \
+  -H "authorization: Bearer $ORG6_TOKEN" \
+  -H "content-type: application/json"
+echo
+echo
+
+
+
+echo "GET query Block by blockNumber 5"
+echo
+curl -s -X GET \
+  "http://localhost:4000/channels/mychannel/blocks/5" \
+  -H "authorization: Bearer $ORG6_TOKEN" \
+  -H "content-type: application/json"
+echo
+echo
+
+
+
+
+echo "GET SLECTED Block by blockNumber 2"
+echo
+curl -s -X GET \
+  "http://localhost:4000/channels/mychannel/selecteddata/2" \
+  -H "authorization: Bearer $ORG2_TOKEN" \
+  -H "content-type: application/json"
+echo
+echo
+
+
+echo "GET query Block by blockNumber 2 by org5"
+echo
+curl -s -X GET \
+  "http://localhost:4000/channels/mychannel/blocks/2?peer=peer2" \
   -H "authorization: Bearer $ORG1_TOKEN" \
   -H "content-type: application/json"
 echo
 echo
+
+
+
+echo "GET query Transaction by TransactionID1"
+echo
+curl -s -X GET http://localhost:4000/channels/mychannel/transactions/$TRX_ID1?peer=peer1 \
+  -H "authorization: Bearer $ORG1_TOKEN" \
+  -H "content-type: application/json"
+echo
+echo
+
+
+
+
+echo "GET query Transaction by TransactionID2"
+echo
+curl -s -X GET http://localhost:4000/channels/mychannel/transactions/$TRX_ID2?peer=peer1 \
+  -H "authorization: Bearer $ORG1_TOKEN" \
+  -H "content-type: application/json"
+echo
+echo
+
+echo "GET query Transaction by TransactionID3"
+echo
+curl -s -X GET http://localhost:4000/channels/mychannel/transactions/$TRX_ID3?peer=peer1 \
+  -H "authorization: Bearer $ORG1_TOKEN" \
+  -H "content-type: application/json"
+echo
+echo
+
+
+
+
 
 ############################################################################
 ### TODO: What to pass to fetch the Block information
@@ -385,3 +492,8 @@ echo
 
 
 echo "Total execution time : $(($(date +%s)-starttime)) secs ..."
+
+
+
+
+

@@ -28,6 +28,12 @@ var ORGS = hfc.getConfigSetting('network-config');
 
 var invokeChaincode = function(peersUrls, channelName, chaincodeName, fcn, args, username, org) {
 	logger.debug(util.format('\n============ invoke transaction on organization %s ============\n', org));
+        logger.debug(util.format('\n============ Peer urls %s ============\n', peersUrls));
+        logger.debug(util.format('\n============ Peer urls %s ============\n', channelName));
+        logger.debug(util.format('\n============ Peer urls %s ============\n', chaincodeName));
+        logger.debug(util.format('\n============ Peer urls %s ============\n', fcn));
+        logger.debug(util.format('\n============ Peer urls %s ============\n', args));
+        logger.debug(util.format('\n============ Peer urls %s ============\n', username)); 
 	var client = helper.getClientForOrg(org);
 	var channel = helper.getChannelForOrg(org);
 	var targets = helper.newPeers(peersUrls);
@@ -45,6 +51,7 @@ var invokeChaincode = function(peersUrls, channelName, chaincodeName, fcn, args,
 			chainId: channelName,
 			txId: tx_id
 		};
+                logger.debug(util.format('\n==========================Proposal request================\n',request));
 		return channel.sendTransactionProposal(request);
 	}, (err) => {
 		logger.error('Failed to enroll user \'' + username + '\'. ' + err);
@@ -61,6 +68,7 @@ var invokeChaincode = function(peersUrls, channelName, chaincodeName, fcn, args,
 				one_good = true;
 				logger.info('transaction proposal was good');
 			} else {
+                                logger.info('\n===================ProposalResponses======================',proposalResponses);
 				logger.error('transaction proposal was bad');
 			}
 			all_good = all_good & one_good;
@@ -91,7 +99,7 @@ var invokeChaincode = function(peersUrls, channelName, chaincodeName, fcn, args,
 					let handle = setTimeout(() => {
 						eh.disconnect();
 						reject();
-					}, 30000);
+					}, 1200000);
 
 					eh.registerTxEvent(transactionID, (tx, code) => {
 						clearTimeout(handle);
